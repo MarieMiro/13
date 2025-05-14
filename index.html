@@ -2,20 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Vue i18n + Logger</title>
+  <title>Vue i18n + Перевод и лог</title>
   <script src="https://unpkg.com/vue@3"></script>
   <style>
     body { font-family: sans-serif; padding: 20px; }
-    button { margin-right: 10px; }
+    button { margin: 5px; }
   </style>
 </head>
 <body>
   <div id="app">
-    <h1>{{ translate('greetings.hello') }}</h1>
+    <h1>{{ translate(currentKey) }}</h1>
 
-    <button @click="log('Привет!')">Лог</button><br><br>
+    <button @click="currentKey = 'greetings.hello'">Показать Hello</button>
+    <button @click="currentKey = 'greetings.goodbye'">Показать Goodbye</button>
+    <br><br>
+
     <button @click="setLanguage('en')">EN</button>
     <button @click="setLanguage('fr')">FR</button>
+    <br><br>
+
+    <button @click="log('Привет!')">Лог</button>
+    <p><strong>Лог:</strong> {{ logMessage }}</p>
   </div>
 
   <script>
@@ -37,7 +44,9 @@
     const app = Vue.createApp({
       data() {
         return {
-          currentLang: 'fr'
+          currentLang: 'fr',
+          currentKey: 'greetings.hello',
+          logMessage: ''
         }
       },
       methods: {
@@ -49,7 +58,9 @@
           this.currentLang = lang
         },
         log(msg) {
-          console.log(`[LOG]: ${msg}`)
+          const fullMsg = [LOG]: ${msg}
+          console.log(fullMsg)
+          this.logMessage = fullMsg
         }
       }
     })
