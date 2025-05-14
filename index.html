@@ -5,24 +5,17 @@
   <title>Vue i18n + Logger</title>
   <script src="https://unpkg.com/vue@3"></script>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    button { margin: 5px; }
+    body { font-family: sans-serif; padding: 20px; }
+    button { margin-right: 10px; }
   </style>
 </head>
 <body>
   <div id="app">
-    <h1>{{ translate(currentKey) }}</h1>
+    <h1>{{ translate('greetings.hello') }}</h1>
 
-    <button @click="currentKey = 'greetings.hello'">Показать Hello</button>
-    <button @click="currentKey = 'greetings.goodbye'">Показать Goodbye</button>
-    <br><br>
-
+    <button @click="log('Привет!')">Лог</button><br><br>
     <button @click="setLanguage('en')">EN</button>
     <button @click="setLanguage('fr')">FR</button>
-    <br><br>
-
-    <button @click="log('Привет!')">Лог</button>
-    <p><strong>Последнее сообщение:</strong> {{ logMessage }}</p>
   </div>
 
   <script>
@@ -44,22 +37,19 @@
     const app = Vue.createApp({
       data() {
         return {
-          currentLang: 'fr',              // Язык по умолчанию
-          currentKey: 'greetings.hello',  // Стартовая строка
-          logMessage: ''                  // Для отображения лога
+          currentLang: 'fr'
         }
       },
       methods: {
         translate(key) {
-          return key.split('.').reduce((o, k) => o?.[k], messages[this.currentLang]) ?? '*перевод не найден+'
+          const keys = key.split('.')
+          return keys.reduce((acc, k) => acc?.[k], messages[this.currentLang]) ?? '*перевод не найден+'
         },
         setLanguage(lang) {
           this.currentLang = lang
         },
         log(msg) {
-          const text = [LOG]: ${msg}
-          console.log(text)
-          this.logMessage = text
+          console.log(`[LOG]: ${msg}`)
         }
       }
     })
@@ -68,4 +58,3 @@
   </script>
 </body>
 </html>
-
