@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue i18n + Logger</title>
+  <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>{{ $translate('greetings.hello') }}</h1>
+
+    <button @click="$log('Привет!')">Лог</button>
+
+    <br><br>
+    <button @click="setLanguage(english)">EN</button>
+    <button @click="setLanguage(french)">FR</button>
+
+    <!-- Компонент с inject -->
+    <my-component></my-component>
+  </div>
+
+  <script type="module">
+    import i18nPlugin from './i18n.js'
+    import loggerPlugin from './logger.js'
+
+    const app = Vue.createApp({
+      data() {
+        return {
+          english: {
+            greetings: { hello: 'Hello!', goodbye: 'Goodbye!' }
+          },
+          french: {
+            greetings: { hello: 'Bonjour!', goodbye: 'Au revoir!' }
+          }
+        }
+      },
+      methods: {
+        setLanguage(langData) {
+          this.$translate = (key) => {
+            return key.split('.').reduce((o, i) => o?.[i], langData) ?? '*перевод не найден+'
+          }
+        }
+      }
+    })
+
+    // Регистрация компонента с inject
+    app.component('my-component', {
+      template: <p>Injected: {{ message }}</p>,
+      setup() {
+        const i18n = Vue.inject('i18n')
+        return {
+          message: i18n.greetings.hello
+        }
+      }
+    })
+
+    // Подключаем плагины
+    app.use(i18nPlugin, {
+      greetings: { hello: 'Bonjour!', goodbye: 'Au revoir!' }
+    })
+    app.use(loggerPlugin)
+
+    app.mount('#app')
+  </script>
+</body>
+</html>
+
